@@ -4,7 +4,7 @@ function defaultEqualityCheck(a, b) {
 }
 
 /**
- * 比较前后的参数是否相等，采用浅比较的方式，就只比较一层
+ * 比较前后的参数是否相等
  * 
  * @param {any} equalityCheck 比较函数，默认采用上面说到的全等比较函数
  * @param {any} prev 上一份参数
@@ -22,9 +22,9 @@ function areArgumentsShallowlyEqual(equalityCheck, prev, next) {
   const length = prev.length
   for (let i = 0; i < length; i++) {
     // 不相等就return false
-    // 这里提一下，官方Readme里的一些F&Q中
-    // (1) 有问到和redux配合使用，为什么state发生变化了，缺不更新数据。那是因为用户
-    // 的reducer没有返回一个新的state。这里浅比较就会得出先后数据是一致的，所以就不会更新。
+    // 这里提一下，官方Readme里的一些F&Q中，基于使用redux和默认s的比较函数
+    // (1) 有问到为什么state发生变化了，缺不更新数据。那是因为用户
+    // 的reducer没有返回一个新的state。这里使用默认的比较函数比较就会得出先后数据是一致的，所以就不会更新。
     // 比如往todolist里插入一个todo，如果只是 state.todos.push(todo)的话，那prev.todos和
     // state.todos还是指向同一个引用，所以===比较是true, 故不会更新
     // (2) 也有问到为什么state没有变化，但老是重新计算一次。那是因为state中某个属性经过filter或者别的操作后
@@ -143,7 +143,6 @@ export function createSelectorCreator(memoize, ...memoizeOptions) {
       // apply arguments instead of spreading for performance.
       return memoizedResultFunc.apply(null, params)
     })
-
     // 最后返回
     selector.resultFunc = resultFunc
     selector.recomputations = () => recomputations
